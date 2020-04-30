@@ -28,17 +28,20 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -46,6 +49,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -330,6 +335,7 @@ public class GUI extends Application{
 		Button close = new Button("Close");
 		close.setStyle("-fx-font-size: 20px");
 		close.setAlignment(Pos.TOP_RIGHT);
+		close.setBackground(new Background(Arrays.asList(new BackgroundFill(Color.web("#FF0000"), CornerRadii.EMPTY,Insets.EMPTY)), null));
 		close.setOnAction(e -> {FileIO.writeUserInfo(currentUser);
 								Platform.exit();
 								System.exit(0);
@@ -597,9 +603,15 @@ public class GUI extends Application{
 		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(foodList);         
 		PieChart foodChart = new PieChart(pieChartData);
         foodChart.setTitle("Calorie Breakdown");
+        
         pane.getChildren().add(foodChart);
 		
 		pane.setBackground(new Background(myBI));
+		Text exercises = new Text();
+		for(Exercise exercise: currentUser.getHistory().getCurrentDailyLog().getExercises()) {
+			exercises.setText(exercises.getText() + exercise + "/n");
+		}
+		pane.getChildren().add(exercises);
 		return pane;
 	}
 
@@ -800,6 +812,7 @@ public class GUI extends Application{
 					saveSuccess.setText("The exercise selected has been scheduled");
 					listview.getSelectionModel().clearSelection();
 					selected.setText("No Selected Exercise");
+					System.err.println(currentUser.getSchedule());
 				}
 				catch(Exception ex){
 					saveError.setVisible(true);

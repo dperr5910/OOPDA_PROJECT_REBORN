@@ -154,7 +154,7 @@ public class ExerciseList implements Serializable {
 	}
 	
 	/**
-	 * Specifies an Aerobic exercise to get returned. null if no Aerboci exercise with the passed name is found
+	 * Specifies an Aerobic exercise to get returned. null if no Aerobic exercise with the passed name is found
 	 * @param name
 	 * @return the found Aerobic exercise
 	 */
@@ -185,5 +185,15 @@ public class ExerciseList implements Serializable {
 		}
 		
 		return null;
+	}
+	
+	public String toString() {
+		String token = "";
+		for(Exercise exercise: exercises) {
+			token += exercise + "\n";
+			
+		}
+		return token;
+		
 	}
 }
