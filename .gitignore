@@ -39,3 +39,4 @@ bin/.project
 bin/src/Admin/Usernames.txt
 bin/src/.project
 bin/src/.classpath
+src/v1/.DS_Store
