@@ -323,7 +323,6 @@ public class GUI extends Application{
 		for (Button btn : buttons) {
 			btn.setMinHeight(sH / 6);
 			btn.setMinWidth(sW / buttons.size());
-			btn.setStyle("-fx-background-insets: 0, 0, 1, 2");
 		}
 		pane.getChildren().addAll(buttons);
 		return pane;
