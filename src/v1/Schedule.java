@@ -1,5 +1,6 @@
 package v1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.Serializable;
 import java.time.LocalTime;
@@ -111,9 +112,30 @@ public class Schedule implements Serializable {
 		String token = "";
 		for(Exercise exercise: schedule.keySet()) {
 
-			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "/n");
+			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "\n");
 		}
 
+		return token;
+	}
+	
+	public String sortedSchedule() {
+		ArrayList<Exercise> sorted = new ArrayList<Exercise>();
+		Exercise min = null;
+		for(int i = 0; i<schedule.size(); i++) {
+		for(Exercise exercise: schedule.keySet()) {
+			if(min == null) {
+				min = exercise;
+			}
+			else if(schedule.get(exercise)[0].isBefore(schedule.get(min)[0]) && !(sorted.contains(exercise))){
+				min = exercise;
+			}
+		}
+		sorted.add(min);
+		}
+		String token = "";
+		for(Exercise exercise: sorted) {
+			token += exercise + "      " + schedule.get(exercise)[0] + "--"+ schedule.get(exercise)[1]+ "\n";
+		}
 		return token;
 	}
 	

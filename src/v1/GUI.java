@@ -363,6 +363,7 @@ public class GUI extends Application{
 		logOutBtn.setOnAction(e -> {
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
+			mainPane.setBottom(null);
 			//btnPane.setVisible(false);
 		
 		});
@@ -604,14 +605,16 @@ public class GUI extends Application{
 		PieChart foodChart = new PieChart(pieChartData);
         foodChart.setTitle("Calorie Breakdown");
         
-        pane.getChildren().add(foodChart);
+ 
 		
 		pane.setBackground(new Background(myBI));
 		Text exercises = new Text();
-		for(Exercise exercise: currentUser.getHistory().getCurrentDailyLog().getExercises()) {
-			exercises.setText(exercises.getText() + exercise + "/n");
-		}
-		pane.getChildren().add(exercises);
+		Label title = new Label("Scheduled Exercises");
+		title.setStyle("-fx-font-size: 20px");
+		VBox schedule = new VBox(title, exercises);
+		exercises.setText(currentUser.getSchedule().sortedSchedule());
+		HBox foodExercises = new HBox(foodChart, schedule);
+		pane.getChildren().add(foodExercises);
 		return pane;
 	}
 
