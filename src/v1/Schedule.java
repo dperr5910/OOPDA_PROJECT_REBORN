@@ -113,7 +113,6 @@ public class Schedule implements Serializable {
 		String token = "";
 		for(Exercise exercise: schedule.keySet()) {
 
-
 			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "\n");
 		}
 
@@ -140,11 +139,6 @@ public class Schedule implements Serializable {
 			System.err.println(exercise);
 			token += exercise + "      " + schedule.get(exercise)[0] + "--"+ schedule.get(exercise)[1]+ "\n";
 		}
-
-			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "/n");
-		}
-
-
 		return token;
 	}
 	
