@@ -169,4 +169,21 @@ public class DailyLog implements Serializable{
         return workouts;
     }
 
+
+	/**
+     * Gets number of duplicate foods
+     * @param foodToCheck Food to get number of
+     * @return count Number of foodToCheck
+     */
+    public int getNumFood(FoodItem foodToCheck) {
+        int count = 0;
+        for(FoodItem food : foodsEaten) {
+            if(food.getName().equals(foodToCheck.getName())) {
+                count++;
+            }
+        }
+        return count;
+
+    }
+
 }
