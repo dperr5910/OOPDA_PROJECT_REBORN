@@ -37,6 +37,7 @@ public class Schedule implements Serializable {
 				|| schedule.get(key)[0].equals(times[1])
 				|| schedule.get(key)[1].equals(times[0])
 				|| schedule.get(key)[1].equals(times[1])
+				|| (schedule.get(key)[0].isAfter(times[0]) && schedule.get(key)[1].isBefore(times[1]))
 						) {
 				fits = false;
 			}
@@ -131,9 +132,11 @@ public class Schedule implements Serializable {
 			}
 		}
 		sorted.add(min);
+		min = null;
 		}
 		String token = "";
 		for(Exercise exercise: sorted) {
+			System.err.println(exercise);
 			token += exercise + "      " + schedule.get(exercise)[0] + "--"+ schedule.get(exercise)[1]+ "\n";
 		}
 		return token;
