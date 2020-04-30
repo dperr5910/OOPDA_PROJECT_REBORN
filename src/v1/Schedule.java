@@ -101,8 +101,13 @@ public class Schedule implements Serializable {
 	}
 	
 	public String toString() {
-		//for(Exercise exercise: this.getSchedule())
-		return null;
+		String token = "";
+		for(Exercise exercise: schedule.keySet()) {
+
+			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "/n");
+		}
+
+		return token;
 	}
 	
 	
