@@ -187,6 +187,9 @@ public class ExerciseList implements Serializable {
 		return null;
 	}
 	
+	/**
+	 * Overriden toString method
+	 */
 	public String toString() {
 		String token = "";
 		for(Exercise exercise: exercises) {
