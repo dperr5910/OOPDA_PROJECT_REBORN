@@ -3,6 +3,7 @@ package v1;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -535,11 +536,17 @@ public class GUI extends Application{
 		
 		b.setOnAction(e -> {if(currentUser.getHistory().containsLog(history.getValue())) {
 
-			ArrayList<PieChart.Data> newList = new ArrayList<PieChart.Data>();
-			for(FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
-				newList.add(new PieChart.Data(food.getName(), food.getCalories()));
+			HashSet<FoodItem> uniqueFoods = new HashSet<FoodItem>();
+			for (FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
+				uniqueFoods.add(food);
 			}
-			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(newList);         
+			ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
+			for(FoodItem food : uniqueFoods) {
+				foodList.add(new PieChart.Data(currentUser.getHistory().retrieveLog(history.getValue()).getNumFood(food) + "x " + food.getName(), currentUser.getHistory().retrieveLog(history.getValue()).getNumFood(food)*food.getCalories()));
+			}
+			
+
+			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(foodList);         
 			PieChart foodChart = new PieChart(foodChartData);
 			foodChart.setTitle("Calorie Breakdown");
 			
@@ -601,9 +608,13 @@ public class GUI extends Application{
 		pane.setSpacing(10);
 		pane.getChildren().addAll(nameLbl, timeLbl, calLbl, calBurnLbl);
 		
+		HashSet<FoodItem> uniqueFoods = new HashSet<FoodItem>();
+		for (FoodItem food : currentUser.getHistory().getCurrentDailyLog().getFoodsEaten()) {
+			uniqueFoods.add(food);
+		}
 		ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
-		for(FoodItem food : currentUser.getHistory().getCurrentDailyLog().getFoodsEaten()) {
-			foodList.add(new PieChart.Data(food.getName(), food.getCalories()));
+		for(FoodItem food : uniqueFoods) {
+			foodList.add(new PieChart.Data(currentUser.getHistory().getCurrentDailyLog().getNumFood(food) + "x " + food.getName(), currentUser.getHistory().getCurrentDailyLog().getNumFood(food)*food.getCalories()));
 		}
 	
 		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(foodList);         

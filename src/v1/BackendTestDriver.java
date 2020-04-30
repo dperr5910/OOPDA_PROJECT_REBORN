@@ -228,11 +228,9 @@ public class BackendTestDriver {
 		fl.addFood("Cube of Sugar", 9);
 		fl.addFood("Coffee Creamer", 70);
 		fl.addFood("Espresso Shot", 3);
-		
-
-		fl.addFood("-", 000);
 
 		ExerciseList el = new ExerciseList();
+		
 		//aerobic exercises 
 		el.addAerobicExercise("Swimming", 150, "20:00");
 		el.addAerobicExercise("Running", 250, "20:00");
@@ -242,6 +240,7 @@ public class BackendTestDriver {
 		el.addAerobicExercise("Biking", 150, "20:00");
 		el.addAerobicExercise("Rowing", 200, "20:00");
 		el.addAerobicExercise("Elliptical", 200, "20:00");
+		
 		//rep exercises
 		el.addRepExercise("Circuit Workout", 3, 9, 500);
 		el.addRepExercise("Lifting Weights", 10, 5, 300);
@@ -250,21 +249,30 @@ public class BackendTestDriver {
 		FileIO.serializeLists(el);
 		FileIO.serializeLists(fl);
 		
-		User testUser = new User("Tester", "Hope this works", "Omnipotent", 200000, 10, 10, 2000);
+		User testUser = new User("Test User", "Tester", "Omnipotent", 200000, 72, 120, 2000);
 		FileIO.writeUserInfo(testUser);
 		DailyLog log1 = new DailyLog(2000);
 		DailyLog log2 = new DailyLog(2000);
 		
 		log1.setDate(LocalDate.of(2020,04,26));
 		log1.addFood(testUser.getFoodList().getFood("Scrambled Egg"));
+		log1.addFood(testUser.getFoodList().getFood("Scrambled Egg"));
+		log1.addFood(testUser.getFoodList().getFood("Sugar Cookie"));
+		log1.addFood(testUser.getFoodList().getFood("Sugar Cookie"));
 		log1.addFood(testUser.getFoodList().getFood("Sugar Cookie"));
 		log1.addFood(testUser.getFoodList().getFood("Cheerios"));
 		log1.addExercise(testUser.getExerciseList().getExercise("Rowing"));
 		log1.addExercise(testUser.getExerciseList().getExercise("Rowing"));
+		log1.addExercise(testUser.getExerciseList().getExercise("HIIT"));
 		
 		log2.setDate(LocalDate.of(2020,04,27));
 		log2.addFood(testUser.getFoodList().getFood("Skim Milk"));
 		log2.addFood(testUser.getFoodList().getFood("Oreo"));
+		log2.addFood(testUser.getFoodList().getFood("Oreo"));
+		log2.addFood(testUser.getFoodList().getFood("Oreo"));
+		log2.addFood(testUser.getFoodList().getFood("Oreo"));
+		log2.addFood(testUser.getFoodList().getFood("Oreo"));
+		log2.addFood(testUser.getFoodList().getFood("Pancake"));
 		log2.addFood(testUser.getFoodList().getFood("Pancake"));
 		log2.addExercise(testUser.getExerciseList().getExercise("Swimming"));
 		log2.addExercise(testUser.getExerciseList().getExercise("Running"));
