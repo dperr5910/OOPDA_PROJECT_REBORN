@@ -46,6 +46,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -357,7 +358,7 @@ public class GUI extends Application{
 		logOutBtn.setOnAction(e -> {
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
-			//btnPane.setVisible(false);
+			mainPane.setBottom(null);
 		
 		});
 		
@@ -489,56 +490,67 @@ public class GUI extends Application{
 	 * @return a VBox with all the elements to display the history
 	 */
     private static VBox makeHistoryPane() {
-		HBox choices = new HBox();
-		HBox lists = new HBox(50);
-		VBox pane = new VBox();
-
-		pane.setAlignment(Pos.TOP_CENTER);
-
-		Label timeLbl = new Label("Choose a Date");
+    	HBox choices = new HBox();
+        HBox lists = new HBox(50);
+        VBox pane = new VBox(30);
+        
+        Label calorieInfo = new Label("");
+        Label exercises = new Label("");
+        Label timeLbl = new Label("Choose a Date");
 		Label calLbl = new Label("");
 		Label calBurnLbl = new Label("");
+		Label temp1 = new Label("");
+		Label temp2 = new Label("");
+        Label dateInputError = new Label("The inputted value for date is not a valid date");
+        
+        Label exerciseLbl = new Label("");
+        exerciseLbl.setFont(Font.font("arial", 17));
+		exerciseLbl.setPadding(new Insets(3,0,10,0));
+        VBox exerciseTitle = new VBox(exerciseLbl, temp2);
+		HBox foodExercises = new HBox(temp1, exerciseTitle);
+		
+        ComboBox<String> history = new ComboBox<String>();
+        history.getItems().addAll(currentUser.getHistory().getKeySet());
+        history.setEditable(true);
+        history.setPromptText("Enter date here");
+        Button b = new Button("Enter");
+        
+        lists.setAlignment(Pos.CENTER);
+        choices.setAlignment(Pos.CENTER);
+        calorieInfo.setAlignment(Pos.CENTER);
+        pane.setAlignment(Pos.TOP_CENTER);
+        pane.setBackground(new Background(myBI));
 		calLbl.setFont(Font.font("arial", 17));
 		timeLbl.setFont(Font.font("arial", FontWeight.EXTRA_BOLD, 17));
 		calBurnLbl.setFont(Font.font("arial", 17));
-
 		pane.setSpacing(10);
-
-		ComboBox<String> history = new ComboBox<String>();
-		history.getItems().addAll(currentUser.getHistory().getKeySet());
-		history.setEditable(true);
-		history.setPromptText("Enter date here");
-		Button b = new Button("Enter");
-
-		Label dateInputError = new Label("The inputted value for date is not a valid date");
 		dateInputError.setVisible(false);
-
-
-
 		lists.setAlignment(Pos.CENTER);
 		choices.setAlignment(Pos.CENTER);
-
 		pane.setAlignment(Pos.TOP_CENTER);
-
+		 lists.getChildren().addAll(exercises);
 		choices.getChildren().addAll(history, b);
 		pane.getChildren().addAll(choices, dateInputError, lists, timeLbl, calLbl, calBurnLbl);
-
-		//.retrieveLog(history.getValue())
-
-
+		pane.getChildren().add(foodExercises);
+		
 		b.setOnAction(e -> {if(currentUser.getHistory().containsLog(history.getValue())) {
 
 			ArrayList<PieChart.Data> newList = new ArrayList<PieChart.Data>();
 			for(FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
 				newList.add(new PieChart.Data(food.getName(), food.getCalories()));
 			}
-
 			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(newList);         
 			PieChart foodChart = new PieChart(foodChartData);
 			foodChart.setTitle("Calorie Breakdown");
-
-			pane.getChildren().set(5, foodChart);
-
+			
+			exerciseLbl.setText("Exercise Breakdown");
+			Text exercisess = new Text();
+			exercisess.setFont(Font.font("arial", 13));
+			for(Exercise exercise: currentUser.getHistory().retrieveLog(history.getValue()).getExercises()) {
+				exercisess.setText(exercisess.getText() + exercise + "\n");
+			}
+			foodExercises.getChildren().set(0, foodChart);
+			exerciseTitle.getChildren().set(1, exercisess);
 
 			timeLbl.setText("Information for " + currentUser.getHistory().retrieveLog(history.getValue()).getDate().toString());
 			calLbl.setText(currentUser.getHistory().retrieveLog(history.getValue()).getcaloriesConsumed()
