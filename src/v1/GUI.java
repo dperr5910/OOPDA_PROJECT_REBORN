@@ -4,7 +4,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -208,7 +207,7 @@ public class GUI extends Application{
 		useUserBtn.setOnAction((event) -> {
 
 			if(FileIO.usernames().contains(userSelection.getValue())) {
-				currentUser = (User)FileIO.deserialize("Admin\\Users\\" + userSelection.getValue() + ".ser");
+				currentUser = (User)FileIO.deserialize("Admin//Users//" + userSelection.getValue() + ".ser");
 				currentUser.getHistory().logDate();
 				mainPane.setCenter(makeDashboardPane());
 				currentTab.setText("DASHBOARD");
@@ -488,86 +487,53 @@ public class GUI extends Application{
 	 * Allows the user to check their daily logs from the past
 	 * @return a VBox with all the elements to display the history
 	 */
-    private static VBox makeHistoryPane() {
+	private static VBox makeHistoryPane() {
 		HBox choices = new HBox();
 		HBox lists = new HBox(50);
-		VBox pane = new VBox();
-
-		pane.setAlignment(Pos.TOP_CENTER);
-
-		Label timeLbl = new Label("Choose a Date");
-		Label calLbl = new Label("");
-		Label calBurnLbl = new Label("");
-		calLbl.setFont(Font.font("arial", 17));
-		timeLbl.setFont(Font.font("arial", FontWeight.EXTRA_BOLD, 17));
-		calBurnLbl.setFont(Font.font("arial", 17));
-
-		pane.setSpacing(10);
-
+		VBox info = new VBox(30);
+		
+		
 		ComboBox<String> history = new ComboBox<String>();
 		history.getItems().addAll(currentUser.getHistory().getKeySet());
 		history.setEditable(true);
 		history.setPromptText("Enter date here");
 		Button b = new Button("Enter");
-
+		Label calorieInfo = new Label("");
+		Label foods = new Label("");
+		Label exercises = new Label("");
 		Label dateInputError = new Label("The inputted value for date is not a valid date");
 		dateInputError.setVisible(false);
 
-
-
+		
 		lists.setAlignment(Pos.CENTER);
 		choices.setAlignment(Pos.CENTER);
-
-		pane.setAlignment(Pos.TOP_CENTER);
-
+		calorieInfo.setAlignment(Pos.CENTER);
+		info.setAlignment(Pos.TOP_CENTER);
+		
+		lists.getChildren().addAll(foods, exercises);
 		choices.getChildren().addAll(history, b);
-		pane.getChildren().addAll(choices, dateInputError, lists, timeLbl, calLbl, calBurnLbl);
-
-		//.retrieveLog(history.getValue())
-
-
+		info.getChildren().addAll(choices, dateInputError, calorieInfo, lists);
+		
 		b.setOnAction(e -> {if(currentUser.getHistory().containsLog(history.getValue())) {
+								calorieInfo.setText(currentUser.getHistory().retrieveLog(history.getValue()).basicInfo());
+								foods.setText(currentUser.getHistory().retrieveLog(history.getValue()).foodInfo());
+								exercises.setText(currentUser.getHistory().retrieveLog(history.getValue()).exerciseInfo());
+								dateInputError.setVisible(false);
+							}
+							else if(!currentUser.getHistory().validDateChecker(history.getValue())){
+								dateInputError.setText("The inputted value for the date is not a valid date");
+								dateInputError.setVisible(true);
+							}
+							else {
+								dateInputError.setText("The inputted value for the date has no log");
+								dateInputError.setVisible(true);
+							}
+							});
+		
+		info.setBackground(new Background(myBI));
+	
 
-			ArrayList<PieChart.Data> newList = new ArrayList<PieChart.Data>();
-			for(FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
-				newList.add(new PieChart.Data(food.getName(), food.getCalories()));
-			}
-
-			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(newList);         
-			PieChart foodChart = new PieChart(foodChartData);
-			foodChart.setTitle("Calorie Breakdown");
-
-			pane.getChildren().set(5, foodChart);
-
-
-			timeLbl.setText("Information for " + currentUser.getHistory().retrieveLog(history.getValue()).getDate().toString());
-			calLbl.setText(currentUser.getHistory().retrieveLog(history.getValue()).getcaloriesConsumed()
-					+ "/" + currentUser.getHistory().getCalorieLimit() + " Calories consumed");
-			calBurnLbl.setText(currentUser.getHistory().retrieveLog(history.getValue()).getExercises().size()
-					+" Exercises completed, " + currentUser.getHistory().retrieveLog(history.getValue()).getCaloriesBurned()
-					+ " Calories burned");
-			dateInputError.setVisible(false);
-		}
-		else if(!currentUser.getHistory().validDateChecker(history.getValue())){
-			dateInputError.setText("The inputted value for the date is not a valid date");
-			dateInputError.setVisible(true);
-		}
-		else {
-			dateInputError.setText("The inputted value for the date has no log");
-			dateInputError.setVisible(true);
-		}
-		});
-
-
-		BackgroundImage myBI= new BackgroundImage(new Image("background2.png",32,32,false,true),
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(830, 500, false, false, true, true)
-				);
-		//then you set to your node
-
-		pane.setBackground(new Background(myBI));
-
-
-		return pane;	
+		return info;	
 	}
 
 	private static VBox makeDashboardPane() {
@@ -586,7 +552,7 @@ public class GUI extends Application{
 		calLbl.setFont(Font.font("arial", 17));
 		timeLbl.setFont(Font.font("arial", FontWeight.EXTRA_BOLD, 17));
 		calBurnLbl.setFont(Font.font("arial", 17));
-		pane.setSpacing(10);
+		pane.setSpacing(20);
 		pane.getChildren().addAll(nameLbl, timeLbl, calLbl, calBurnLbl);
 		
 		ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
@@ -618,6 +584,7 @@ public class GUI extends Application{
 			listview.setItems(listNew.getItems());
 			
 			TextField search = new TextField();
+			search.setPromptText("Search");
 			Predicate<FoodItem> filter = e -> (e.getName().toUpperCase().contains(search.getText().toUpperCase()));
 			search.setOnKeyTyped(e ->{
 				updateList(listview,listNew.getItems().filtered(filter));
@@ -705,6 +672,7 @@ public class GUI extends Application{
 		}
 		listview.setItems(listNew.getItems());
 		TextField search = new TextField();
+		search.setPromptText("Search");
 		Predicate<Exercise> filter = e -> (e.getName().toUpperCase().contains(search.getText().toUpperCase()));
 		search.setOnKeyTyped(e ->{
 				updateList(listview,listNew.getItems().filtered(filter));
@@ -741,7 +709,6 @@ public class GUI extends Application{
 		ChoiceBox<String> exerciseChoices = new ChoiceBox<String>();
 		ChoiceBox<String> time = new ChoiceBox<String>();
 		exerciseChoices.getItems().addAll("Aerobic", "Rep");
-		exerciseChoices.getSelectionModel().clearAndSelect(0);
 		time.getItems().addAll("AM", "PM");
 		time.getSelectionModel().select(0);
 		
@@ -852,6 +819,8 @@ public class GUI extends Application{
 				exerciseCreator.getChildren().addAll(name, reps, intensity, caloriesBurned);
 			}
 		});
+		
+		exerciseChoices.getSelectionModel().select(0);
 		
 		scheduleTime.getChildren().addAll(startTime, time);
 		scheduleOptions.getChildren().addAll(schedule, scheduleTime);

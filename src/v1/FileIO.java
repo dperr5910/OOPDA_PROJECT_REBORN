@@ -39,7 +39,7 @@ public class FileIO {
 		   usernameWriter.write(user.getUsername() + "\n");
 		   usernameWriter.close();
 		}
-		   FileOutputStream fileStream = new FileOutputStream("Admin\\Users/" + user.getUsername() + ".ser");
+		   FileOutputStream fileStream = new FileOutputStream("Admin\\Users\\" + user.getUsername() + ".ser");
 		   ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
 		   objectStream.writeObject(user);
 		   objectStream.close();
