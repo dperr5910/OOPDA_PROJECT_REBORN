@@ -1,5 +1,6 @@
 package v1;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -16,16 +17,29 @@ import java.io.InvalidClassException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+/**
+ * Methods for serialization, deserialization, and file management
+ * @author Cyan
+ *
+ */
 public class FileIO {
 	private static final boolean APPEND_MODE = true;
 	private static final boolean OVERWRITE_MODE = false;
 	private static final Logger LOGGER = Logger.getLogger(GUI.class.getName());
 	
+	/**
+	 * Constructor
+	 */
 	public static void fileIO() {
 		
 	}
 
 	
+	/**
+	 * Saves user to file
+	 * @param user Current user
+	 */
 	public static void writeUserInfo(User user) {
 		new File("Admin").mkdir();
 		new File("Admin\\Users").mkdir();
@@ -63,7 +77,11 @@ public class FileIO {
 		
 	}
 
-	
+	/**
+	 * Deserializes an object from a file
+	 * @param filePath Path to serialized object
+	 * @return An object
+	 */
 	public static Object deserialize(String filePath) {
 		try
 		{
@@ -81,7 +99,10 @@ public class FileIO {
 		}
 	}
 	
-	
+	/**
+	 * Gets the usernames from usernames.txt
+	 * @return List of usernames
+	 */
 	public static ArrayList<String> usernames(){
 		ArrayList<String> usernames = new ArrayList<>();
 		try {
@@ -99,6 +120,10 @@ public class FileIO {
 		return  usernames;
 	}
 	
+	/**
+	 * Logs when a user logs in
+	 * @param username User who logged in
+	 */
 	public static void logLogin(String username) {
 		try {
 			FileHandler filehandler = new FileHandler("Admin\\User Log.txt", APPEND_MODE);
@@ -126,6 +151,11 @@ public class FileIO {
 			ex.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Serializes list - not used in main processes
+	 * @param Foodlist
+	 */
 	public static void serializeLists(FoodList f) {
 		try {
 			FileOutputStream file = new FileOutputStream("Admin\\foodlist.ser");

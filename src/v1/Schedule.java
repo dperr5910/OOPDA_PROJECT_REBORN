@@ -17,6 +17,9 @@ public class Schedule implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private HashMap<Exercise, LocalTime[]> schedule;
 	
+	/**
+	 * Generic Constructor
+	 */
 	public Schedule() {
 		this.schedule = new HashMap<Exercise, LocalTime[]>();
 	}
@@ -97,6 +100,12 @@ public class Schedule implements Serializable {
 		return this.schedule;
 	}
 	
+	/**
+	 * Converts a string time into military time 
+	 * @param time String of time
+	 * @param ampm am or pm
+	 * @return LocalTime object in military time
+	 */
 	public static LocalTime convertToMilitary(String time, String ampm) {
 		String[] times = time.split(":");
 		if(ampm.equals("AM")) {
@@ -107,6 +116,9 @@ public class Schedule implements Serializable {
 		}
 	}
 	
+	/**
+	 * Overriden toString method to display schedule
+	 */
 	public String toString() {
 		String token = "";
 		for(Exercise exercise: schedule.keySet()) {

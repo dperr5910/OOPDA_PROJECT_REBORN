@@ -118,9 +118,11 @@ public class History implements Serializable {
 		
 	}
 	
-	
-	
-	
+	/**
+	 * Retrieves a dailylog from a given date
+	 * @param date Date to retrieve from
+	 * @return dailylog
+	 */
 	public DailyLog retrieveLog(String date) {
 		
 		if(containsLog(date)) {
@@ -129,6 +131,11 @@ public class History implements Serializable {
 		return null;
 	}
 	
+	/**
+	 * Checks if a date is valid
+	 * @param date Date to check
+	 * @return If date is valid
+	 */
 	public boolean validDateChecker(String date) {
 		if(date == null){
 			return false;
@@ -157,6 +164,11 @@ public class History implements Serializable {
 		}
 	}
 	
+	/**
+	 * Checks if a date has a log
+	 * @param date Date to check
+	 * @return If date has a log
+	 */
 	public boolean containsLog(String date) {
 		if(validDateChecker(date)) {
 			if(previousDailylogs.containsKey(getDate(date))) {
@@ -166,6 +178,11 @@ public class History implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Creates a date from a string
+	 * @param date String to use
+	 * @return A LocalDate object
+	 */
 	public LocalDate getDate(String date) {
 		if(validDateChecker(date)) {
 			if(date.contains("/")) {
