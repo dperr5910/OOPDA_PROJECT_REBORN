@@ -361,10 +361,10 @@ public class GUI extends Application{
 		logOutBtn.setMinSize(100, 100);
 		
 		logOutBtn.setOnAction(e -> {
+			FileIO.writeUserInfo(currentUser);
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
-			//btnPane.setVisible(false);
-		
+			mainPane.setBottom(null);
 		});
 		
 		
@@ -604,24 +604,22 @@ public class GUI extends Application{
 		PieChart foodChart = new PieChart(pieChartData);
         foodChart.setTitle("Calorie Breakdown");
         
-        pane.getChildren().add(foodChart);
+ 
 		
 		pane.setBackground(new Background(myBI));
 		Text exercises = new Text();
 		for(Exercise exercise: currentUser.getHistory().getCurrentDailyLog().getExercises()) {
 			exercises.setText(exercises.getText() + exercise + "/n");
 		}
-		pane.getChildren().add(exercises);
+		HBox foodExercises = new HBox(foodChart, exercises);
+		pane.getChildren().add(foodExercises);
 		return pane;
 	}
 
-	private static BorderPane makeFoodPane() {
+	private static HBox makeFoodPane() {
 		
-		//Left Side
-		
-		//Search bar
 		ListView<FoodItem> listview = new ListView<FoodItem>();
-		listview.setPrefWidth(380);
+		listview.setPrefWidth(300);
 		ListView<FoodItem> listNew = new ListView<FoodItem>();
 		
 		for(FoodItem food: currentUser.getFoodList().getFoods()) {
@@ -635,74 +633,75 @@ public class GUI extends Application{
 				updateList(listview,listNew.getItems().filtered(filter));
 				
 			});
+			
+		HBox foodPane = new HBox(50);
+		HBox addFood = new HBox(20);
+		VBox leftSide = new VBox();
+		VBox rightSide = new VBox(20);
+		VBox addFoodOptions = new VBox(20);
+		
+		addFood.setAlignment(Pos.CENTER);
+		rightSide.setAlignment(Pos.CENTER);
+		addFoodOptions.setAlignment(Pos.CENTER);
+		
+		Label addFoodStatus = new Label("");
+		Label logStatus = new Label("");
+		Label selected = new Label("No Selected Food");
+		selected.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+		selected.setAlignment(Pos.CENTER);
+		selected.setPrefWidth(380);
+		
+		Button log = new Button("Log");
+		Button add = new Button("Add");
+		
+		log.setPrefHeight(60);
+		log.setPrefWidth(100);
+		log.setStyle("-fx-font-size: 20px");
+		
+		TextField foodName = new TextField();
+		TextField foodCalories = new TextField();
+		
+		foodName.setPromptText("Name");
+		foodCalories.setPromptText("Calories");
 		
 		
-		
-		//Button to log food
-		Button logFood = new Button("Log");
-		logFood.setPadding(new Insets(0,20,0,20));
-		logFood.setOnAction(e->{
-		currentUser.getHistory().getCurrentDailyLog().addFood(
-				listview.getSelectionModel().getSelectedItem());
+		listview.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FoodItem>() {
+	          public void changed(ObservableValue<? extends FoodItem> observable, FoodItem oldValue, FoodItem newValue) {
+	        	  if(newValue != null) {
+	        		  selected.setText(newValue.toString());
+	        	  }
+	          }
+	        });
+		log.setOnAction(e -> {
+			if(listview.getSelectionModel().getSelectedIndex() == -1) {
+				logStatus.setText("There is no food selected");
+			}
+			else {
+				currentUser.getHistory().getCurrentDailyLog().addFood(listview.getSelectionModel().getSelectedItem());
+				logStatus.setText("The food selected has been logged");
+				listview.getSelectionModel().clearSelection();
+				selected.setText("No Selected Food");
+			}
+		});
+		add.setOnAction(e -> {
+			if(checkSettingInput(e, foodCalories) && foodName.getText().length() > 0) {
+				FoodItem food = new FoodItem(foodName.getText(), Integer.parseInt(foodCalories.getText()));
+				currentUser.getFoodList().addFood(food);
+				addFoodStatus.setText("Food successfully added");
+			}
+			else {
+				addFoodStatus.setText("One of the values entered is invalid");
+			}
 		});
 		
-		//Left side in vbox
-		VBox left = new VBox(search, listview, logFood);
+		addFoodOptions.getChildren().addAll(foodName, foodCalories);
+		addFood.getChildren().addAll(addFoodOptions, add);
+		leftSide.getChildren().addAll(search, listview);
+		rightSide.getChildren().addAll(selected, log,logStatus, addFood, addFoodStatus);
+		foodPane.getChildren().addAll(leftSide, rightSide);
 		
-		
-		
-		//Right side
-
-		
-		Label name = new Label("Name : ");
-		Label calories = new Label("Calories : ");
-		Label confirm = new Label();
-		
-		
-		TextField enterName = new TextField();
-		TextField enterCalories = new TextField();
-		
-		//Name
-		HBox nameField = new HBox(name, enterName);
-		
-		//Calories
-		HBox calorieField = new HBox(calories, enterCalories);
-		
-		Button addFood = new Button("Add a Food");
-		
-		addFood.setOnAction(e->{ 
-			if(checkSettingInput(e, enterCalories)) {
-			FoodItem food  = new FoodItem(enterName.getText(), Integer.parseInt(enterCalories.getText()));
-			if(currentUser.getFoodList().addFood(enterName.getText(), Integer.parseInt(enterCalories.getText()))) {
-				System.err.println("ALL FOOD!");
-				listNew.getItems().add(food);
-				confirm.setText("The food has been successfully added!");
-			}
-			else {
-				System.err.println("lmao nope");
-			}
-			
-			
-			}
-			else {
-				confirm.setText("Not valid input for a food");
-			}
-			
-		} );
-		
-		//Right side VBox
-		
-		VBox right = new VBox(nameField, calorieField, addFood, confirm);
-		
-		//Hbox to house left and right
-		HBox whole = new HBox(left, right);
-		BorderPane panel = new BorderPane();
-
-		panel.setCenter(whole);
-		
-		//then you set to your node
-		panel.setBackground(new Background(myBI));
-		return panel;
+		foodPane.setBackground(new Background(myBI));
+		return foodPane;
 	}
 
 	private static HBox makeExercisePane() {
@@ -753,7 +752,6 @@ public class GUI extends Application{
 		ChoiceBox<String> exerciseChoices = new ChoiceBox<String>();
 		ChoiceBox<String> time = new ChoiceBox<String>();
 		exerciseChoices.getItems().addAll("Aerobic", "Rep");
-		exerciseChoices.getSelectionModel().clearAndSelect(0);
 		time.getItems().addAll("AM", "PM");
 		time.getSelectionModel().select(0);
 		
@@ -773,7 +771,7 @@ public class GUI extends Application{
 		
 		startTime.setPromptText("hh:mm");
 		name.setPromptText("Name");
-		duration.setPromptText("Duration");
+		duration.setPromptText("Duration(hh:mm)");
 		intensity.setPromptText("Intensity");
 		reps.setPromptText("Reps");
 		caloriesBurned.setPromptText("Calories Burned");
@@ -865,7 +863,7 @@ public class GUI extends Application{
 				exerciseCreator.getChildren().addAll(name, reps, intensity, caloriesBurned);
 			}
 		});
-		
+		exerciseChoices.getSelectionModel().select(0);
 		scheduleTime.getChildren().addAll(startTime, time);
 		scheduleOptions.getChildren().addAll(schedule, scheduleTime);
 		top.getChildren().addAll(logExercise, scheduleOptions);
@@ -876,9 +874,7 @@ public class GUI extends Application{
 		
 		everything.setBackground(new Background(myBI));
 		return everything;
-		
-		
-		}
+}
 		
 	
 		public static void updateList(ListView oldList, FilteredList filteredList){

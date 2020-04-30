@@ -106,7 +106,17 @@ public class Schedule implements Serializable {
 			return LocalTime.of(Integer.parseInt(times[0])+ 12, Integer.parseInt(times[1]));
 		}
 	}
+	
+	public String toString() {
+		String token = "";
+		for(Exercise exercise: schedule.keySet()) {
 
+			token += (exercise + "       " + schedule.get(exercise)[0] + "--" + schedule.get(exercise)[1] + "/n");
+		}
+
+		return token;
+	}
+	
 	
 	
 }

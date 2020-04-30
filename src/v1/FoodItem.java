@@ -71,7 +71,7 @@ public class FoodItem implements Serializable{
 	 * @return a string consisting of the name and calories of the food
 	 */
 	public String toString() {
-		return name + " : " + calories;
+		return name + ": " + calories;
 	}
 
 }

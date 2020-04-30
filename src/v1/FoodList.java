@@ -51,7 +51,7 @@ public class FoodList implements Serializable{
 	 * @param calories
 	 * @return true if successful, false if unsuccessful
 	 */
-	public boolean addFood(String name, int calories) {
+	public void addFood(String name, int calories) {
 		boolean noDupe = true;
 		for(FoodItem food: foods) {
 			if(food.getName().equals(name)) {
@@ -60,13 +60,12 @@ public class FoodList implements Serializable{
 		
 		if(noDupe) {
 			foods.add(new FoodItem(name, calories));
-			return noDupe;
-		}
-		else {
-			return noDupe;
 		}
 	}
 	
+	public void addFood(FoodItem food) {
+		foods.add(food);
+	}
 	
 	/**
 	 * removes the FoodItem with the specified name from the list
