@@ -1,0 +1,41 @@
+src/v1/AerobicExercise.class
+src/v1App.class
+src/v1/ButtonOptions.class
+src/v1/Driver.class
+src/v1/Exercise.class
+src/v1/ExerciseCatalog.class
+src/v1/FileIO.class
+src/v1/FoodCatalog.class
+src/v1/FoodItem.class
+src/v1HealthLogger.class
+src/v1/InformationBox.class
+src/v1/RepExercise.class
+src/v1/Scheduleable.class
+src/v1/TextInput.class
+src/v1/User.class
+src/v1/AerobicExercise.class
+*.class
+*.class
+.gitignore
+*.class
+*.class
+*.class
+src/v1/AerobicExercise.class
+/bin/
+src/v1/Exercise.class
+src/v1/Exercise.class
+*.ser
+bin/.project
+bin/fitness.mdj
+bin/README.md
+bin/src/.classpath
+bin/src/.project
+Admin/User Log.txt.2
+Admin/Usernames.txt
+*.1
+Admin/User Log.txt
+Admin/User Log.txt.lck
+bin/.project
+bin/src/Admin/Usernames.txt
+bin/src/.project
+bin/src/.classpath
