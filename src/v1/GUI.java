@@ -56,6 +56,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * GUI for the whole program
+ * @author Cyan
+ *
+ */
 public class GUI extends Application{
 
 	private static final int sW = 830;
@@ -66,9 +71,7 @@ public class GUI extends Application{
 	private static BorderPane mainPane;
 	private static Pane loginPane, btnPane;
 	private static Label currentTab;
-	
 	private static User currentUser;
-	
 	private static BackgroundImage myBI= new BackgroundImage(new Image("background2.png",32,32,false,true),
 	        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(830, 500, false, false, true, true)
 	          );
@@ -90,6 +93,9 @@ public class GUI extends Application{
 		
 	}
 
+	/**
+	 * Setup the gui
+	 */
 	private static void setupGUI() {
 		btnPane = makeButtonPane();
 		loginPane = makeLoginPane();	
@@ -132,6 +138,10 @@ public class GUI extends Application{
 		
 	}
 
+	/**
+	 * Makes login pane for logging in
+	 * @return Login Pane
+	 */
 	private static HBox makeLoginPane() {
 
 		HBox pane = new HBox();
@@ -265,6 +275,10 @@ public class GUI extends Application{
 	}
 
 
+	/**
+	 * Makes bottom button bar
+	 * @return button pane
+	 */
 	private static HBox makeButtonPane() {
 		HBox pane = new HBox();
 		pane.setStyle("-fx-border-color: black");
@@ -328,6 +342,10 @@ public class GUI extends Application{
 		return pane;
 	}
 	
+	/**
+	 * Makes top bar
+	 * @return top pane
+	 */
 	private static HBox topPane(){
 		HBox top = new HBox(300);
 		top.setAlignment(Pos.TOP_RIGHT);
@@ -584,6 +602,10 @@ public class GUI extends Application{
 		return pane;	
 	}
 
+    /**
+     * Makes dashboard and returns it on a pane
+     * @return dashboard pane
+     */
 	private static VBox makeDashboardPane() {
 		VBox pane = new VBox();
 
@@ -630,6 +652,10 @@ public class GUI extends Application{
 		return pane;
 	}
 
+	/**
+	 * Makes food pane
+	 * @return food pane
+	 */
 	private static BorderPane makeFoodPane() {
 		
 		//Left Side
@@ -720,6 +746,10 @@ public class GUI extends Application{
 		return panel;
 	}
 
+	/**
+	 * Makes exercise pane
+	 * @return Exercise pane
+	 */
 	private static HBox makeExercisePane() {
 		
 		ListView<Exercise> listview = new ListView<Exercise>();
@@ -895,7 +925,11 @@ public class GUI extends Application{
 		
 		}
 		
-	
+		/**
+		 * Updates the list
+		 * @param oldList Old list
+		 * @param filteredList Filtered List
+		 */
 		public static void updateList(ListView oldList, FilteredList filteredList){
 			oldList.setItems(filteredList);
 		}
