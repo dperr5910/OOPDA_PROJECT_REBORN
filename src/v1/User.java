@@ -3,15 +3,38 @@ package v1;
 import java.io.Serializable;
 import java.time.LocalTime;
 
+/**
+ * Class to store user info and methods
+ * @author Cyan
+ *
+ */
 public class User implements Serializable{
 	
 
 	private static final long serialVersionUID = 3999007488314647320L;
+	/**
+	 * Name of user, Gender of user, Username of user
+	 */
     private String name, gender, username;
+    /**
+     * Age of user, Height off user, Weight of user
+     */
     private int age, height, weight;
+    /**
+     * A user's history which contains all previous dailylogs
+     */
     private History history;
+    /**
+     * A user's' schedule of exercises
+     */
     private Schedule schedule;
+    /**
+     * A user's foodlist
+     */
     private FoodList foodlist;
+    /**
+     * A user's exerciselist
+     */
     private ExerciseList exerciselist;
 
     
@@ -180,31 +203,60 @@ public class User implements Serializable{
 		
 	}
 	
+	/**
+	 * Add a new exercise to the schedule
+	 * @param exercise Exercise to schedule
+	 * @param times Times of activity
+	 */
 	public void addToSchedule(Exercise exercise, LocalTime[] times) {
 		schedule.addToSchedule(exercise, times);
 		
 	}
 	
+	/**
+	 * Generic getter
+	 * @return foodlist
+	 */
 	public FoodList getFoodList() {
 		return this.foodlist;
 	}
 	
+	/**
+	 * Generic setter
+	 * @param newFoodList New food list
+	 */
 	public void setFoodList(FoodList newFoodList) {
 		
 	}
 		
+	/**
+	 * Generic getter
+	 * @return exerciselist
+	 */
 	public ExerciseList getExerciseList() {
 		return this.exerciselist;
 	}
 	
+	/**
+	 * Generic setter
+	 * @param newExerciseList
+	 */
 	public void setExerciseList(ExerciseList newExerciseList) {
 		
 	}
 	
+	/**
+	 * Generic getter
+	 * @return schedule
+	 */
 	public Schedule getSchedule() {
 		return this.schedule;
 	}
 	
+	/**
+	 * Generic setter
+	 * @param scheduleNew New schedule for user
+	 */
 	public void setSchedule(Schedule scheduleNew) {
 		this.schedule = scheduleNew;
 	}

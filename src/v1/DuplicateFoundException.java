@@ -10,6 +10,10 @@ public class DuplicateFoundException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructor for DuplicateFoundException
+     * @param username Username of user
+     */
     public DuplicateFoundException(String username) {
         super("User: "+username+" already exists");
 

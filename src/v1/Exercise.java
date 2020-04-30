@@ -33,10 +33,18 @@ public abstract class Exercise implements Serializable {
 		this.name = name;
 	}
 	
+	/**
+	 * Gets calories burned
+	 * @return caloriesBurned
+	 */
 	public int getCaloriesBurned() {
 		return caloriesBurned;
 	}
 	
+	/**
+	 * Set calories burned
+	 * @param newCaloriesBurned
+	 */
 	public void setCaloriesBurned(int newCaloriesBurned) {
 		caloriesBurned = newCaloriesBurned;
 	}

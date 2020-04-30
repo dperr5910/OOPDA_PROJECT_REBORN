@@ -32,16 +32,21 @@ public class DailyLog implements Serializable{
         exercises = new ArrayList<>(5);
     }
 
-	
+	/**
+	 * Return foods eaten
+	 * @return foodsEaten
+	 */
 	public ArrayList<FoodItem> getFoodsEaten() {
 		return foodsEaten;
 	}
 
-
+	/**
+	 * Set foods eaten
+	 * @param foodsEaten List of eaten foods
+	 */
 	public void setFoodsEaten(ArrayList<FoodItem> foodsEaten) {
 		this.foodsEaten = foodsEaten;
 	}
-
 
 	/**
 	 * Standard getter for calories burned
@@ -51,11 +56,18 @@ public class DailyLog implements Serializable{
 		return caloriesBurned;
 	}
 	
+	/**
+	 * Gets exercises
+	 * @return exercises Exercises
+	 */
 	public ArrayList<Exercise> getExercises() {
 		return exercises;
 	}
 
-
+	/**
+	 * Sets exercises
+	 * @param exercises Exercises
+	 */
 	public void setExercises(ArrayList<Exercise> exercises) {
 		this.exercises = exercises;
 	}
@@ -168,22 +180,22 @@ public class DailyLog implements Serializable{
         }
         return workouts;
     }
-
-
-	/**
+    
+    /**
      * Gets number of duplicate foods
      * @param foodToCheck Food to get number of
      * @return count Number of foodToCheck
      */
     public int getNumFood(FoodItem foodToCheck) {
-        int count = 0;
-        for(FoodItem food : foodsEaten) {
-            if(food.getName().equals(foodToCheck.getName())) {
-                count++;
-            }
-        }
-        return count;
-
+    	int count = 0;
+    	for(FoodItem food : foodsEaten) {
+    		if(food.getName().equals(foodToCheck.getName())) {
+    			count++;
+    		}
+    	}
+    	return count;
+    	
     }
+
 
 }
