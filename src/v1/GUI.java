@@ -360,9 +360,11 @@ public class GUI extends Application{
 		logOutBtn.setMinSize(100, 100);
 		
 		logOutBtn.setOnAction(e -> {
+			
+			FileIO.writeUserInfo(currentUser);
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
-			//btnPane.setVisible(false);
+			mainPane.setBottom(null);
 		
 		});
 		
