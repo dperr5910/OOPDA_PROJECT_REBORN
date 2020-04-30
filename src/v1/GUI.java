@@ -29,17 +29,20 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -48,6 +51,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -225,8 +229,7 @@ public class GUI extends Application{
 
 		enterBtn.setOnAction((event) -> {
 			if(FileIO.usernames().contains(txtUserName.getText())) {
-				//new DuplicateFoundException(txtUserName.getText());
-				//createUserError.setText("The username entered is already taken, please enter a new username");
+				//throw (new DuplicateFoundException(txtUserName.getText())));
 				createUserError.setText((new DuplicateFoundException(txtUserName.getText())).getMessage());
 				createUserError.setVisible(true);
 				txtUserName.setPromptText(txtUserName.getText());
@@ -320,7 +323,6 @@ public class GUI extends Application{
 		for (Button btn : buttons) {
 			btn.setMinHeight(sH / 6);
 			btn.setMinWidth(sW / buttons.size());
-			btn.setStyle("-fx-background-insets: 0, 0, 1, 2");
 		}
 		pane.getChildren().addAll(buttons);
 		return pane;
@@ -332,6 +334,7 @@ public class GUI extends Application{
 		Button close = new Button("Close");
 		close.setStyle("-fx-font-size: 20px");
 		close.setAlignment(Pos.TOP_RIGHT);
+		close.setBackground(new Background(Arrays.asList(new BackgroundFill(Color.web("#FF0000"), CornerRadii.EMPTY,Insets.EMPTY)), null));
 		close.setOnAction(e -> {FileIO.writeUserInfo(currentUser);
 								Platform.exit();
 								System.exit(0);
@@ -357,6 +360,8 @@ public class GUI extends Application{
 		logOutBtn.setMinSize(100, 100);
 		
 		logOutBtn.setOnAction(e -> {
+			
+			FileIO.writeUserInfo(currentUser);
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
 			mainPane.setBottom(null);
@@ -491,51 +496,47 @@ public class GUI extends Application{
 	 * @return a VBox with all the elements to display the history
 	 */
     private static VBox makeHistoryPane() {
-    	HBox choices = new HBox();
-        HBox lists = new HBox(50);
-        VBox pane = new VBox(30);
-        
-        Label calorieInfo = new Label("");
-        Label exercises = new Label("");
-        Label timeLbl = new Label("Choose a Date");
+		HBox choices = new HBox();
+		HBox lists = new HBox(50);
+		VBox pane = new VBox();
+
+		pane.setAlignment(Pos.TOP_CENTER);
+
+		Label timeLbl = new Label("Choose a Date");
 		Label calLbl = new Label("");
 		Label calBurnLbl = new Label("");
-		Label temp1 = new Label("");
-		Label temp2 = new Label("");
-        Label dateInputError = new Label("The inputted value for date is not a valid date");
-        
-        Label exerciseLbl = new Label("");
-        exerciseLbl.setFont(Font.font("arial", 17));
-		exerciseLbl.setPadding(new Insets(3,0,10,0));
-        VBox exerciseTitle = new VBox(exerciseLbl, temp2);
-		HBox foodExercises = new HBox(temp1, exerciseTitle);
-		
-        ComboBox<String> history = new ComboBox<String>();
-        history.getItems().addAll(currentUser.getHistory().getKeySet());
-        history.setEditable(true);
-        history.setPromptText("Enter date here");
-        Button b = new Button("Enter");
-        
-        lists.setAlignment(Pos.CENTER);
-        choices.setAlignment(Pos.CENTER);
-        calorieInfo.setAlignment(Pos.CENTER);
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.setBackground(new Background(myBI));
 		calLbl.setFont(Font.font("arial", 17));
 		timeLbl.setFont(Font.font("arial", FontWeight.EXTRA_BOLD, 17));
 		calBurnLbl.setFont(Font.font("arial", 17));
+
 		pane.setSpacing(10);
+
+		ComboBox<String> history = new ComboBox<String>();
+		history.getItems().addAll(currentUser.getHistory().getKeySet());
+		history.setEditable(true);
+		history.setPromptText("Enter date here");
+		Button b = new Button("Enter");
+
+		Label dateInputError = new Label("The inputted value for date is not a valid date");
 		dateInputError.setVisible(false);
+
+
+
 		lists.setAlignment(Pos.CENTER);
 		choices.setAlignment(Pos.CENTER);
+
 		pane.setAlignment(Pos.TOP_CENTER);
-		 lists.getChildren().addAll(exercises);
+
 		choices.getChildren().addAll(history, b);
 		pane.getChildren().addAll(choices, dateInputError, lists, timeLbl, calLbl, calBurnLbl);
-		pane.getChildren().add(foodExercises);
-		
+
+		//.retrieveLog(history.getValue())
+
+
 		b.setOnAction(e -> {if(currentUser.getHistory().containsLog(history.getValue())) {
 
+		
+			
 			HashSet<FoodItem> uniqueFoods = new HashSet<FoodItem>();
 			for (FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
 				uniqueFoods.add(food);
@@ -549,15 +550,9 @@ public class GUI extends Application{
 			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(foodList);         
 			PieChart foodChart = new PieChart(foodChartData);
 			foodChart.setTitle("Calorie Breakdown");
-			
-			exerciseLbl.setText("Exercise Breakdown");
-			Text exercisess = new Text();
-			exercisess.setFont(Font.font("arial", 13));
-			for(Exercise exercise: currentUser.getHistory().retrieveLog(history.getValue()).getExercises()) {
-				exercisess.setText(exercisess.getText() + exercise + "\n");
-			}
-			foodExercises.getChildren().set(0, foodChart);
-			exerciseTitle.getChildren().set(1, exercisess);
+
+			pane.getChildren().set(5, foodChart);
+
 
 			timeLbl.setText("Information for " + currentUser.getHistory().retrieveLog(history.getValue()).getDate().toString());
 			calLbl.setText(currentUser.getHistory().retrieveLog(history.getValue()).getcaloriesConsumed()
@@ -616,13 +611,22 @@ public class GUI extends Application{
 		for(FoodItem food : uniqueFoods) {
 			foodList.add(new PieChart.Data(currentUser.getHistory().getCurrentDailyLog().getNumFood(food) + "x " + food.getName(), currentUser.getHistory().getCurrentDailyLog().getNumFood(food)*food.getCalories()));
 		}
+		
 	
 		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(foodList);         
 		PieChart foodChart = new PieChart(pieChartData);
         foodChart.setTitle("Calorie Breakdown");
-        pane.getChildren().add(foodChart);
+        
+ 
 		
 		pane.setBackground(new Background(myBI));
+		Text exercises = new Text();
+		Label title = new Label("Scheduled Exercises");
+		title.setStyle("-fx-font-size: 20px");
+		VBox schedule = new VBox(title, exercises);
+		exercises.setText(currentUser.getSchedule().sortedSchedule());
+		HBox foodExercises = new HBox(foodChart, schedule);
+		pane.getChildren().add(foodExercises);
 		return pane;
 	}
 
@@ -823,6 +827,7 @@ public class GUI extends Application{
 					saveSuccess.setText("The exercise selected has been scheduled");
 					listview.getSelectionModel().clearSelection();
 					selected.setText("No Selected Exercise");
+					System.err.println(currentUser.getSchedule());
 				}
 				catch(Exception ex){
 					saveError.setVisible(true);
@@ -879,7 +884,6 @@ public class GUI extends Application{
 		scheduleTime.getChildren().addAll(startTime, time);
 		scheduleOptions.getChildren().addAll(schedule, scheduleTime);
 		top.getChildren().addAll(logExercise, scheduleOptions);
-		bottom.getChildren().addAll(exerciseChoices, exerciseCreator, create);
 		leftData.getChildren().addAll(search, listview);
 		rightData.getChildren().addAll(selected, top, saveError, saveSuccess, bottom, numInput);
 		everything.getChildren().addAll(leftData, rightData);
@@ -897,3 +901,4 @@ public class GUI extends Application{
 
 
 } 
+
