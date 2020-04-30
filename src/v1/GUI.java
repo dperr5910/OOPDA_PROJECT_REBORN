@@ -3,6 +3,7 @@ package v1;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -228,8 +229,7 @@ public class GUI extends Application{
 
 		enterBtn.setOnAction((event) -> {
 			if(FileIO.usernames().contains(txtUserName.getText())) {
-				//new DuplicateFoundException(txtUserName.getText());
-				//createUserError.setText("The username entered is already taken, please enter a new username");
+				//throw (new DuplicateFoundException(txtUserName.getText())));
 				createUserError.setText((new DuplicateFoundException(txtUserName.getText())).getMessage());
 				createUserError.setVisible(true);
 				txtUserName.setPromptText(txtUserName.getText());
@@ -323,7 +323,6 @@ public class GUI extends Application{
 		for (Button btn : buttons) {
 			btn.setMinHeight(sH / 6);
 			btn.setMinWidth(sW / buttons.size());
-			btn.setStyle("-fx-background-insets: 0, 0, 1, 2");
 		}
 		pane.getChildren().addAll(buttons);
 		return pane;
@@ -361,10 +360,11 @@ public class GUI extends Application{
 		logOutBtn.setMinSize(100, 100);
 		
 		logOutBtn.setOnAction(e -> {
+			
+			FileIO.writeUserInfo(currentUser);
 			currentUser = null;
 			mainPane.setCenter(makeLoginPane());
 			mainPane.setBottom(null);
-			//btnPane.setVisible(false);
 		
 		});
 		
@@ -535,12 +535,19 @@ public class GUI extends Application{
 
 		b.setOnAction(e -> {if(currentUser.getHistory().containsLog(history.getValue())) {
 
-			ArrayList<PieChart.Data> newList = new ArrayList<PieChart.Data>();
-			for(FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
-				newList.add(new PieChart.Data(food.getName(), food.getCalories()));
+		
+			
+			HashSet<FoodItem> uniqueFoods = new HashSet<FoodItem>();
+			for (FoodItem food : currentUser.getHistory().retrieveLog(history.getValue()).getFoodsEaten()) {
+				uniqueFoods.add(food);
 			}
+			ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
+			for(FoodItem food : uniqueFoods) {
+				foodList.add(new PieChart.Data(currentUser.getHistory().retrieveLog(history.getValue()).getNumFood(food) + "x " + food.getName(), currentUser.getHistory().retrieveLog(history.getValue()).getNumFood(food)*food.getCalories()));
+			}
+			
 
-			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(newList);         
+			ObservableList<PieChart.Data> foodChartData = FXCollections.observableArrayList(foodList);         
 			PieChart foodChart = new PieChart(foodChartData);
 			foodChart.setTitle("Calorie Breakdown");
 
@@ -596,10 +603,15 @@ public class GUI extends Application{
 		pane.setSpacing(10);
 		pane.getChildren().addAll(nameLbl, timeLbl, calLbl, calBurnLbl);
 		
-		ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
-		for(FoodItem food : currentUser.getHistory().getCurrentDailyLog().getFoodsEaten()) {
-			foodList.add(new PieChart.Data(food.getName(), food.getCalories()));
+		HashSet<FoodItem> uniqueFoods = new HashSet<FoodItem>();
+		for (FoodItem food : currentUser.getHistory().getCurrentDailyLog().getFoodsEaten()) {
+			uniqueFoods.add(food);
 		}
+		ArrayList<PieChart.Data> foodList = new ArrayList<PieChart.Data>();
+		for(FoodItem food : uniqueFoods) {
+			foodList.add(new PieChart.Data(currentUser.getHistory().getCurrentDailyLog().getNumFood(food) + "x " + food.getName(), currentUser.getHistory().getCurrentDailyLog().getNumFood(food)*food.getCalories()));
+		}
+		
 	
 		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(foodList);         
 		PieChart foodChart = new PieChart(pieChartData);
@@ -872,7 +884,6 @@ public class GUI extends Application{
 		scheduleTime.getChildren().addAll(startTime, time);
 		scheduleOptions.getChildren().addAll(schedule, scheduleTime);
 		top.getChildren().addAll(logExercise, scheduleOptions);
-		bottom.getChildren().addAll(exerciseChoices, exerciseCreator, create);
 		leftData.getChildren().addAll(search, listview);
 		rightData.getChildren().addAll(selected, top, saveError, saveSuccess, bottom, numInput);
 		everything.getChildren().addAll(leftData, rightData);
