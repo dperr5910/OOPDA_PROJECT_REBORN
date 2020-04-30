@@ -883,6 +883,7 @@ public class GUI extends Application{
 		scheduleOptions.getChildren().addAll(schedule, scheduleTime);
 		top.getChildren().addAll(logExercise, scheduleOptions);
 		leftData.getChildren().addAll(search, listview);
+		bottom.getChildren().addAll(exerciseChoices, exerciseCreator, create);
 		rightData.getChildren().addAll(selected, top, saveError, saveSuccess, bottom, numInput);
 		everything.getChildren().addAll(leftData, rightData);
 		
